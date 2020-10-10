@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!-- 注册控制器 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+                <property name="features">
+                    <list>
+                        <!-- Date的日期转换器 -->
+                        <value>WriteDateUseDateFormat</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+
+    </mvc:annotation-driven>
+    <context:component-scan base-package="com.kgc.controller"></context:component-scan>
+    <!--静态资源的引用-->
+    <mvc:resources location="/static/" mapping="/static/**"></mvc:resources>
+    <!-- 对转向页面的路径解析。prefix：前缀， suffix：后缀 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/jsp"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!--全局异常处理-->
+    <!--<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.RuntimeException">error</prop>
+            </props>
+        </property>
+    </bean>-->
+
+    <!--单文件上传解析器-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="5000000"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+</beans>
